@@ -28,7 +28,7 @@
                 <h4 class="card-title">Data Berita</h4>
                 <a href="{{ route('berita.create') }}" class="btn btn-primary btn-sm float-right">Tambah Berita</a>
             </div>
-            <div class="card-body">
+            <!-- <div class="card-body"> -->
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
