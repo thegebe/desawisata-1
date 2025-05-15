@@ -58,7 +58,7 @@
                             @for($i = 1; $i <= 5; $i++)
                             <div class="col-md-4 mb-3">
                                 <div class="custom-file">
-                                    <input type="file" class="form-control-file @error('foto'.$i) is-invalid @enderror" name="foto{{$i}}">
+                                    <input type="file" id="foto{{$i}}" class="form-control-file @error('foto'.$i) is-invalid @enderror" name="foto{{$i}}" accept="image/*">
                                     <label class="custom-file-label" for="foto{{$i}}">Foto {{$i}}</label>
                                 </div>
                             </div>
@@ -76,6 +76,15 @@
         </div>
     </div>
 </div>
+<script>
+document.querySelectorAll('.form-control-file').forEach(function(input){
+    input.addEventListener('change', function(e){
+        let fileName = e.target.files[0] ? e.target.files[0].name : '';
+        let label = e.target.nextElementSibling;
+        if(label) label.innerText = fileName;
+    });
+});
+</script>
 @endsection
 @section('footer')
     @include('be.footer')

@@ -50,133 +50,38 @@
                                 <td>{{ $obyekWisata->nama_wisata }}</td>
                                 <td>{{ $obyekWisata->kategoriWisata->kategori_wisata }}</td>
                                 <td>{{ $obyekWisata->fasilitas }}</td>
-                                <td>
-                                    @if ($obyekWisata['foto1'] !== null)
-                                    <!-- Thumbnail -->
-                                    <img src="{{ asset('storage/' . $obyekWisata['foto1']) }}" alt="Foto 1" style="width: 50px; cursor: pointer;"
-                                        class="img-thumbnail" data-toggle="modal" data-target="#foto1Modal_{{ $obyekWisata->id }}">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <td>
+                                        @if (!empty($obyekWisata['foto' . $i]))
+                                        <!-- Thumbnail -->
+                                        <img src="{{ asset('storage/' . $obyekWisata['foto' . $i]) }}" alt="Foto {{ $i }}" style="width: 50px; cursor: pointer;"
+                                            class="img-thumbnail" data-toggle="modal" data-target="#fotoModal_{{ $i }}_{{ $obyekWisata->id }}">
 
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="foto1Modal_{{ $obyekWisata->id }}" tabindex="-1" role="dialog" aria-labelledby="foto1ModalLabel_{{ $obyekWisata->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="foto1ModalLabel_{{ $obyekWisata->id }}">Foto 1 - {{ $obyekWisata->nama_wisata }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <img src="{{ asset('storage/' . $obyekWisata['foto1']) }}" alt="Foto 1" class="img-fluid">
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="fotoModal_{{ $i }}_{{ $obyekWisata->id }}" tabindex="-1" role="dialog" aria-labelledby="fotoModalLabel_{{ $i }}_{{ $obyekWisata->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="fotoModalLabel_{{ $i }}_{{ $obyekWisata->id }}">Foto {{ $i }} - {{ $obyekWisata->nama_wisata }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img src="{{ asset('storage/' . $obyekWisata['foto' . $i]) }}" alt="Foto {{ $i }}" class="img-fluid">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($obyekWisata['foto2'] !== null)
-                                    <!-- Thumbnail -->
-                                    <img src="{{ asset('storage/' . $obyekWisata['foto2']) }}" alt="Foto 2" style="width: 50px; cursor: pointer;"
-                                        class="img-thumbnail" data-toggle="modal" data-target="#foto2Modal_{{ $obyekWisata->id }}">
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="foto2Modal_{{ $obyekWisata->id }}" tabindex="-1" role="dialog" aria-labelledby="foto2ModalLabel_{{ $obyekWisata->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="foto2ModalLabel_{{ $obyekWisata->id }}">Foto 2 - {{ $obyekWisata->nama_wisata }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <img src="{{ asset('storage/' . $obyekWisata['foto2']) }}" alt="Foto 2" class="img-fluid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($obyekWisata['foto3'] !== null)
-                                    <!-- Thumbnail -->
-                                    <img src="{{ asset('storage/' . $obyekWisata['foto3']) }}" alt="Foto 3" style="width: 50px; cursor: pointer;"
-                                        class="img-thumbnail" data-toggle="modal" data-target="#foto3Modal_{{ $obyekWisata->id }}">
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="foto3Modal_{{ $obyekWisata->id }}" tabindex="-1" role="dialog" aria-labelledby="foto3ModalLabel_{{ $obyekWisata->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="foto3ModalLabel_{{ $obyekWisata->id }}">Foto 3 - {{ $obyekWisata->nama_wisata }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <img src="{{ asset('storage/' . $obyekWisata['foto3']) }}" alt="Foto 3" class="img-fluid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($obyekWisata['foto4'] !== null)
-                                    <!-- Thumbnail -->
-                                    <img src="{{ asset('storage/' . $obyekWisata['foto4']) }}" alt="Foto 4" style="width: 50px; cursor: pointer;"
-                                        class="img-thumbnail" data-toggle="modal" data-target="#foto4Modal_{{ $obyekWisata->id }}">
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="foto4Modal_{{ $obyekWisata->id }}" tabindex="-1" role="dialog" aria-labelledby="foto4ModalLabel_{{ $obyekWisata->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="foto4ModalLabel_{{ $obyekWisata->id }}">Foto 4 - {{ $obyekWisata->nama_wisata }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <img src="{{ asset('storage/' . $obyekWisata['foto4']) }}" alt="Foto 4" class="img-fluid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($obyekWisata['foto5'] !== null)
-                                    <!-- Thumbnail -->
-                                    <img src="{{ asset('storage/' . $obyekWisata['foto5']) }}" alt="Foto 5" style="width: 50px; cursor: pointer;"
-                                        class="img-thumbnail" data-toggle="modal" data-target="#foto5Modal_{{ $obyekWisata->id }}">
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="foto5Modal_{{ $obyekWisata->id }}" tabindex="-1" role="dialog" aria-labelledby="foto5ModalLabel_{{ $obyekWisata->id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="foto5ModalLabel_{{ $obyekWisata->id }}">Foto 5 - {{ $obyekWisata->nama_wisata }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body text-center">
-                                                    <img src="{{ asset('storage/' . $obyekWisata['foto5']) }}" alt="Foto 5" class="img-fluid">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-                                </td>
+                                        @endif
+                                    </td>
+                                @endfor
                                 <td class="text-center">
-                                    <!-- <a href="{{ route('obyekwisata.show', $obyekWisata->id) }}" class="mdi mdi-eye"></a> -->
-                                    <a href="{{ route('obyekwisata.edit', $obyekWisata->id) }}" class="mdi mdi-pencil"></a>
-                                    <form action="{{ route('obyekwisata.destroy', $obyekWisata->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="mdi mdi-close text-danger" onclick="return confirm('Yakin ingin menghapus?')"></button>
+                                    <a href="{{ route('obyekwisata.edit', $obyekWisata->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('obyekwisata.destroy', $obyekWisata->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
                                     </form>
                                 </td>
                             </tr>

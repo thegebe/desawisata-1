@@ -31,40 +31,34 @@ class PenginapanController extends Controller
      */
     public function store(Request $request)
     {
-    // Validasi data
-    $request->validate([
-        'nama_penginapan' => 'required|string|max:255',
-        'deskripsi' => 'required|string',
-        'fasilitas' => 'required|string',
-        'foto1' => 'nullable|image|max:5120',
-        'foto2' => 'nullable|image|max:5120',
-        'foto3' => 'nullable|image|max:5120',
-        'foto4' => 'nullable|image|max:5120',
-        'foto5' => 'nullable|image|max:5120',
-    ]);
+        $request->validate([
+            'nama_penginapan' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'fasilitas' => 'required|string',
+            'foto1' => 'required|image|max:5120',
+            'foto2' => 'nullable|image|max:5120',
+            'foto3' => 'nullable|image|max:5120',
+            'foto4' => 'nullable|image|max:5120',
+            'foto5' => 'nullable|image|max:5120',
+        ]);
 
-    // Simpan data ke database
-    $penginapan = new Penginapan();
-    $penginapan->nama_penginapan = $request->nama_penginapan;
-    $penginapan->deskripsi = $request->deskripsi;
-    $penginapan->fasilitas = $request->fasilitas;
+        $penginapan = new Penginapan();
+        $penginapan->nama_penginapan = $request->nama_penginapan;
+        $penginapan->deskripsi = $request->deskripsi;
+        $penginapan->fasilitas = $request->fasilitas;
 
-    // Simpan foto jika ada
-    for ($i = 1; $i <= 5; $i++) {
-        $fotoField = 'foto' . $i;
-        if ($request->hasFile($fotoField)) {
-            $file = $request->file($fotoField);
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/penginapan'), $filename);
-            $penginapan->{'foto' . $i} = $filename;
+        for ($i = 1; $i <= 5; $i++) {
+            $fotoField = 'foto' . $i;
+            if ($request->hasFile($fotoField)) {
+                $penginapan->{$fotoField} = $request->file($fotoField)->store('penginapan', 'public');
+            } else {
+                $penginapan->{$fotoField} = null; // <-- penting agar field tetap diisi
+            }
         }
-    }
 
-    $penginapan->save();
+        $penginapan->save();
 
-    // Redirect ke halaman index dengan pesan sukses
-    return redirect()->route('penginapan.index')->with('success', 'Penginapan berhasil ditambahkan.');
-
+        return redirect()->route('penginapan.index')->with('success', 'Penginapan berhasil ditambahkan.');
     }
 
     /**
@@ -92,7 +86,7 @@ class PenginapanController extends Controller
         $data = $request->validate([
             'nama_penginapan' => 'required|string|max:255',
             'deskripsi' => 'required',
-            'fasilitas' => 'nullable|string|max:255',
+            'fasilitas' => 'required|string',
             'foto1' => 'nullable|image|max:5120',
             'foto2' => 'nullable|image|max:5120',
             'foto3' => 'nullable|image|max:5120',
@@ -100,10 +94,17 @@ class PenginapanController extends Controller
             'foto5' => 'nullable|image|max:5120',
         ]);
 
-        foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
-            if ($request->hasFile($foto)) {
-                if ($penginapan->$foto) Storage::delete($penginapan->$foto);
-                $data[$foto] = $request->file($foto)->store('penginapan');
+        // Update foto menggunakan Storage facade
+        for ($i = 1; $i <= 5; $i++) {
+            $fotoField = 'foto' . $i;
+            if ($request->hasFile($fotoField)) {
+                // Hapus foto lama jika ada
+                if ($penginapan->{$fotoField}) {
+                    Storage::disk('public')->delete($penginapan->{$fotoField});
+                }
+                // Simpan foto baru
+                $path = $request->file($fotoField)->store('penginapan', 'public');
+                $data[$fotoField] = $path;
             }
         }
 
@@ -116,8 +117,12 @@ class PenginapanController extends Controller
      */
     public function destroy(Penginapan $penginapan)
     {
-        foreach (['foto1', 'foto2', 'foto3', 'foto4', 'foto5'] as $foto) {
-            if ($penginapan->$foto) Storage::delete($penginapan->$foto);
+        // Hapus semua foto terkait
+        for ($i = 1; $i <= 5; $i++) {
+            $fotoField = 'foto' . $i;
+            if ($penginapan->{$fotoField}) {
+                Storage::disk('public')->delete($penginapan->{$fotoField});
+            }
         }
 
         $penginapan->delete();

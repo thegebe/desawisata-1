@@ -261,12 +261,12 @@
     <!-- /Paket Wisata Section -->
 
     <!-- Penginapan Section -->
-    <section id="penginapan" class="portfolio section">
+    <section id="penginapan" class="services section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Penginapan</h2>
-        <p>Penginapan Desa Arborek</p>
+        <p>Penginapan Desa Arborek<br></p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -276,18 +276,19 @@
             <div class="service-item">
               <div class="img">
                 @php
-                  $foto = $penginapan->foto1 ?? $penginapan->foto2 ?? $penginapan->foto3 ?? $penginapan->foto4 ?? $penginapan->foto5;
+                $foto = $penginapan->foto1 ?? $penginapan->foto2 ?? $penginapan->foto3 ?? $penginapan->foto4 ?? $penginapan->foto5;
                 @endphp
                 @if($foto)
                   <img src="{{ asset('storage/' . $foto) }}" class="img-fluid" alt="{{ $penginapan->nama_penginapan }}">
                 @else
-                  <img src="fe/assets/img/default-wisata.jpg" class="img-fluid" alt="Default">
+                  <img src="fe/assets/img/default-penginapan.jpg" class="img-fluid" alt="Default">
                 @endif
               </div>
               <div class="details position-relative">
                 <div class="icon">
                   <i class="bi bi-house-door"></i>
                 </div>
+                <!-- Tombol untuk membuka modal -->
                 <a href="javascript:void(0)" class="stretched-link" data-bs-toggle="modal" data-bs-target="#modalPenginapan{{ $penginapan->id }}">
                   <h3>{{ $penginapan->nama_penginapan }}</h3>
                 </a>
@@ -307,21 +308,33 @@
                 </div>
                 <div class="modal-body">
                   <div class="row">
-                    <div class="col-md-20 mb-10">
+                    <div class="col-md-6 mb-4">
                       @if($foto)
                         <img src="{{ asset('storage/' . $foto) }}" class="img-fluid rounded" alt="{{ $penginapan->nama_penginapan }}">
                       @else
-                        <img src="fe/assets/img/default-wisata.jpg" class="img-fluid rounded" alt="Default">
+                        <img src="fe/assets/img/default-penginapan.jpg" class="img-fluid rounded" alt="Default">
                       @endif
+                      
+                      <!-- Galeri foto kecil -->
+                      <div class="mt-3">
+                        @for($i = 1; $i <= 5; $i++)
+                          @if($penginapan->{'foto'.$i})
+                            <img src="{{ asset('storage/' . $penginapan->{'foto'.$i}) }}" 
+                                class="img-thumbnail me-1 mb-1" 
+                                style="width:60px; cursor:pointer;" 
+                                onclick="document.getElementById('mainPenginapanImage').src='{{ asset('storage/' . $penginapan->{'foto'.$i}) }}'">
+                          @endif
+                        @endfor
+                      </div>
                     </div>
                     <div class="col-md-6">
+                      <h5 class="mb-3">Detail Penginapan</h5>
                       <p><b>Deskripsi:</b><br>{{ $penginapan->deskripsi }}</p>
                       <p><b>Fasilitas:</b><br>{{ $penginapan->fasilitas }}</p>
-                      @for($i = 1; $i <= 5; $i++)
-                        @if($penginapan->{'foto'.$i})
-                          <img src="{{ asset('storage/' . $penginapan->{'foto'.$i}) }}" class="img-thumbnail me-1 mb-1" style="width:60px;">
-                        @endif
-                      @endfor
+                      
+                      <!-- Tambahkan info tambahan jika ada -->
+                      <!-- <p><b>Harga:</b> Rp{{ number_format($penginapan->harga, 0, ',', '.') }}/malam</p> -->
+                      <!-- <p><b>Kapasitas:</b> {{ $penginapan->kapasitas }} orang</p> -->
                     </div>
                   </div>
                 </div>
@@ -329,7 +342,11 @@
             </div>
           </div>
           @empty
-          <p class="text-center">Belum ada penginapan yang tersedia.</p>
+          <div class="col-12 text-center">
+            <div class="alert alert-info">
+              Belum ada penginapan yang tersedia.
+            </div>
+          </div>
           @endforelse
         </div>
       </div>

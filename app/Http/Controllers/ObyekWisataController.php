@@ -35,11 +35,11 @@ class ObyekWisataController extends Controller
             'deskripsi_wisata' => 'required|string',
             'id_kategori_wisata' => 'required|exists:kategori_wisatas,id',
             'fasilitas' => 'required|string',
-            'foto1' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto2' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto4' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto5' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto1' => 'nullable|image|max:5120',
+            'foto2' => 'nullable|image|max:5120',
+            'foto3' => 'nullable|image|max:5120',
+            'foto4' => 'nullable|image|max:5120',
+            'foto5' => 'nullable|image|max:5120',
         ]);
 
         $data = $request->all();
@@ -84,11 +84,11 @@ class ObyekWisataController extends Controller
             'deskripsi_wisata' => 'required|string',
             'id_kategori_wisata' => 'required|exists:kategori_wisatas,id',
             'fasilitas' => 'required|string',
-            'foto1' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto2' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto3' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto4' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'foto5' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto1' => 'nullable|image|max:5120',
+            'foto2' => 'nullable|image|max:5120',
+            'foto3' => 'nullable|image|max:5120',
+            'foto4' => 'nullable|image|max:5120',
+            'foto5' => 'nullable|image|max:5120',
         ]);
 
         $data = $request->all();
