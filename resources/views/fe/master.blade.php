@@ -41,7 +41,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-      <a href="home" class="logo d-flex align-items-center me-auto">
+      <a href="#home" class="logo d-flex align-items-center me-auto">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1 class="sitename">Desa Arborek</h1>
@@ -71,8 +71,14 @@
               <li><a href="#">Dropdown 4</a></li>
             </ul>
           </li> -->
-          <li><a href="#reservasi">Reservasi</a></li>
-        </ul>
+          <li class="dropdown"><a href="#"><span>SELENGKAPNYA  </span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="#">RESERVASI</a></li>
+              <li><a href="#">VOUCHER</a></li>
+              <!-- <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a> -->
+              </li>
+            </ul>
+        </li>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
@@ -194,12 +200,12 @@
             <div class="service-item">
               <div class="img">
                 @php
-                  $foto = $paket->foto1 ?? $paket->foto2 ?? $paket->foto3 ?? $paket->foto4 ?? $paket->foto5;
+                $foto = $paket->foto1 ?? $paket->foto2 ?? $paket->foto3 ?? $paket->foto4 ?? $paket->foto5;
                 @endphp
                 @if($foto)
-                  <img src="{{ asset('storage/' . $foto) }}" class="img-fluid" alt="{{ $paket->nama_paket }}">
+                <img src="{{ asset('storage/' . $foto) }}" class="img-fluid" alt="{{ $paket->nama_paket }}">
                 @else
-                  <img src="fe/assets/img/default-wisata.jpg" class="img-fluid" alt="Default">
+                <img src="fe/assets/img/default-wisata.jpg" class="img-fluid" alt="Default">
                 @endif
               </div>
               <div class="details position-relative">
@@ -228,12 +234,12 @@
                   <div class="row">
                     <div class="col-md-20 mb-10">
                       @php
-                        $foto = $paket->foto1 ?? $paket->foto2 ?? $paket->foto3 ?? $paket->foto4 ?? $paket->foto5;
+                      $foto = $paket->foto1 ?? $paket->foto2 ?? $paket->foto3 ?? $paket->foto4 ?? $paket->foto5;
                       @endphp
                       @if($foto)
-                        <img src="{{ asset('storage/' . $foto) }}" class="img-fluid rounded" alt="{{ $paket->nama_paket }}">
+                      <img src="{{ asset('storage/' . $foto) }}" class="img-fluid rounded" alt="{{ $paket->nama_paket }}">
                       @else
-                        <img src="fe/assets/img/default-wisata.jpg" class="img-fluid rounded" alt="Default">
+                      <img src="fe/assets/img/default-wisata.jpg" class="img-fluid rounded" alt="Default">
                       @endif
                     </div>
                     <div class="col-md-6">
@@ -242,9 +248,9 @@
                       <p><b>Harga:</b> Rp{{ number_format($paket->harga_per_pack, 0, ',', '.') }}/orang</p>
                       @for($i = 1; $i <= 5; $i++)
                         @if($paket->{'foto'.$i})
-                          <img src="{{ asset('storage/' . $paket->{'foto'.$i}) }}" class="img-thumbnail me-1 mb-1" style="width:60px;">
+                        <img src="{{ asset('storage/' . $paket->{'foto'.$i}) }}" class="img-thumbnail me-1 mb-1" style="width:60px;">
                         @endif
-                      @endfor
+                        @endfor
                     </div>
                   </div>
                 </div>
@@ -275,13 +281,19 @@
           <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
             <div class="service-item">
               <div class="img">
+                <!-- kalo block if di php di ilangin kenapa foto gede ga muncul -->
                 @php
+                // $foto = $penginapan->foto1 ?? $penginapan->foto2 ?? $penginapan->foto3 ??$penginapan->foto4 ?? $penginapan->foto5;
                 $foto = $penginapan->foto1 ?? $penginapan->foto2 ?? $penginapan->foto3 ?? $penginapan->foto4 ?? $penginapan->foto5;
+                if($foto) {
+                $foto = str_replace(url('storage/'), '', $foto);
+                $foto = str_replace('storage/', '', $foto);
+                }
                 @endphp
                 @if($foto)
-                  <img src="{{ asset('storage/' . $foto) }}" class="img-fluid" alt="{{ $penginapan->nama_penginapan }}">
+                <img src="{{ asset('storage/' . $foto) }}" class="img-fluid" alt="{{ $penginapan->nama_penginapan }}">
                 @else
-                  <img src="fe/assets/img/default-penginapan.jpg" class="img-fluid" alt="Default">
+                <img src="fe/assets/img/default-penginapan.jpg" class="img-fluid" alt="Default">
                 @endif
               </div>
               <div class="details position-relative">
@@ -308,30 +320,33 @@
                 </div>
                 <div class="modal-body">
                   <div class="row">
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-20 mb-10">
+                      @php
+                      $foto = $penginapan->foto1 ?? $penginapan->foto2 ?? $penginapan->foto3 ?? $penginapan->foto4 ?? $penginapan->foto5;
+                      @endphp
                       @if($foto)
-                        <img src="{{ asset('storage/' . $foto) }}" class="img-fluid rounded" alt="{{ $penginapan->nama_penginapan }}">
+                      <img id="mainPenginapanImage{{ $penginapan->id }}" src="{{ asset('storage/' . $foto) }}" class="img-fluid rounded" alt="{{ $penginapan->nama_penginapan }}">
                       @else
-                        <img src="fe/assets/img/default-penginapan.jpg" class="img-fluid rounded" alt="Default">
+                      <img id="mainPenginapanImage{{ $penginapan->id }}" src="fe/assets/img/default-penginapan.jpg" class="img-fluid rounded" alt="Default">
                       @endif
-                      
+
                       <!-- Galeri foto kecil -->
                       <div class="mt-3">
                         @for($i = 1; $i <= 5; $i++)
                           @if($penginapan->{'foto'.$i})
-                            <img src="{{ asset('storage/' . $penginapan->{'foto'.$i}) }}" 
-                                class="img-thumbnail me-1 mb-1" 
-                                style="width:60px; cursor:pointer;" 
-                                onclick="document.getElementById('mainPenginapanImage').src='{{ asset('storage/' . $penginapan->{'foto'.$i}) }}'">
+                          <img src="{{ asset('storage/' . $penginapan->{'foto'.$i}) }}"
+                            class="img-thumbnail me-1 mb-1"
+                            style="width:60px; cursor:pointer;"
+                            onclick="document.getElementById('mainPenginapanImage{{ $penginapan->id }}').src='{{ asset('storage/' . $penginapan->{'foto'.$i}) }}';">
                           @endif
-                        @endfor
+                          @endfor
                       </div>
                     </div>
                     <div class="col-md-6">
                       <h5 class="mb-3">Detail Penginapan</h5>
                       <p><b>Deskripsi:</b><br>{{ $penginapan->deskripsi }}</p>
                       <p><b>Fasilitas:</b><br>{{ $penginapan->fasilitas }}</p>
-                      
+
                       <!-- Tambahkan info tambahan jika ada -->
                       <!-- <p><b>Harga:</b> Rp{{ number_format($penginapan->harga, 0, ',', '.') }}/malam</p> -->
                       <!-- <p><b>Kapasitas:</b> {{ $penginapan->kapasitas }} orang</p> -->
@@ -358,78 +373,89 @@
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Services</h2>
-        <p>CHECK OUR SERVICES</p>
-      </div><!-- End Section Title -->
+        <h2>Berita</h2>
+        <p>Berita Tentang Kita</p>
+      </div>
+      <!-- End Section Title -->
 
       <div class="container">
-
         <div class="row gy-4">
-
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+          @forelse($beritas as $berita)
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ $loop->iteration * 100 }}">
             <div class="service-item d-flex position-relative h-100">
-              <i class="bi bi-briefcase icon flex-shrink-0"></i>
+              @if($berita->foto)
+              <div class="img-container me-3" style="width: 100px; height: 100px; overflow: hidden;">
+                <img src="{{ asset('storage/' . $berita->foto) }}" class="img-fluid h-100 w-100" style="object-fit: cover;" alt="{{ $berita->judul }}">
+              </div>
+              @else
+              <i class="bi bi-newspaper icon flex-shrink-0"></i>
+              @endif
               <div>
-                <h4 class="title"><a href="#" class="stretched-link">Lorem Ipsum</a></h4>
-                <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
+                <h4 class="title">
+                  <a href="javascript:void(0)" class="stretched-link" data-bs-toggle="modal" data-bs-target="#modalBerita{{ $berita->id }}">
+                    {{ $berita->judul }}
+                  </a>
+                </h4>
+                <p class="description">{{ Str::limit($berita->berita, 150) }}</p>
+                <small class="text-muted">
+                  @if(is_string($berita->tgl_post))
+                    {{ \Carbon\Carbon::parse($berita->tgl_post)->format('d M Y') }}
+                  @else
+                    {{ $berita->tgl_post->format('d M Y') }}
+                  @endif
+                </small>
               </div>
             </div>
-          </div><!-- End Service Item -->
+          </div>
 
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="service-item d-flex position-relative h-100">
-              <i class="bi bi-card-checklist icon flex-shrink-0"></i>
-              <div>
-                <h4 class="title"><a href="#" class="stretched-link">Dolor Sitema</a></h4>
-                <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
+          <!-- Modal Detail Berita -->
+          <div class="modal fade" id="modalBerita{{ $berita->id }}" tabindex="-1" aria-labelledby="modalBeritaLabel{{ $berita->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalBeritaLabel{{ $berita->id }}">{{ $berita->judul }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-12 mb-4">
+                      @if($berita->foto)
+                      <img src="{{ asset('storage/' . $berita->foto) }}" class="img-fluid rounded w-100" alt="{{ $berita->judul }}" style="max-height: 400px; object-fit: cover;">
+                      @else
+                      <img src="fe/assets/img/default-news.jpg" class="img-fluid rounded w-100" alt="Default" style="max-height: 400px; object-fit: cover;">
+                      @endif
+                    </div>
+                    <div class="col-md-12">
+                      <p class="text-muted mb-3">
+                        <i class="bi bi-calendar me-2"></i>
+                        @if(is_string($berita->tgl_post))
+                          {{ \Carbon\Carbon::parse($berita->tgl_post)->format('l, d F Y') }}
+                        @else
+                          {{ $berita->tgl_post->format('l, d F Y') }}
+                        @endif
+                      </p>
+                      <p><b>Kategori:</b> {{ $berita->kategoriBerita->kategori_berita ?? 'Tidak ada kategori' }}</p>
+                      <div class="content mt-4">
+                        {!! nl2br(e($berita->berita)) !!}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
               </div>
             </div>
-          </div><!-- End Service Item -->
+          </div>
+          <!-- End Modal Detail Berita -->
 
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="service-item d-flex position-relative h-100">
-              <i class="bi bi-bar-chart icon flex-shrink-0"></i>
-              <div>
-                <h4 class="title"><a href="#" class="stretched-link">Sed ut perspiciatis</a></h4>
-                <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
-            <div class="service-item d-flex position-relative h-100">
-              <i class="bi bi-binoculars icon flex-shrink-0"></i>
-              <div>
-                <h4 class="title"><a href="#" class="stretched-link">Magni Dolores</a></h4>
-                <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
-            <div class="service-item d-flex position-relative h-100">
-              <i class="bi bi-brightness-high icon flex-shrink-0"></i>
-              <div>
-                <h4 class="title"><a href="#" class="stretched-link">Nemo Enim</a></h4>
-                <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-
-          <div class="col-md-6" data-aos="fade-up" data-aos-delay="600">
-            <div class="service-item d-flex position-relative h-100">
-              <i class="bi bi-calendar4-week icon flex-shrink-0"></i>
-              <div>
-                <h4 class="title"><a href="#" class="stretched-link">Eiusmod Tempor</a></h4>
-                <p class="description">Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-
+          @empty
+          <div class="col-12 text-center">
+            <p>Belum ada berita yang tersedia.</p>
+          </div>
+          @endforelse
         </div>
-
       </div>
-
     </section>
     <!-- /Berita Section -->
 

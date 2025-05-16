@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ObyekWisata;
 use App\Models\PaketWisata;
 use App\Models\Penginapan;
+use App\Models\Berita;
 
 class HomeController extends Controller
 {
@@ -17,8 +18,9 @@ class HomeController extends Controller
         $obyekWisatas = ObyekWisata::with('kategoriWisata')->latest()->get();
         $paketWisatas = PaketWisata::latest()->get();
         $penginapans  = Penginapan::latest()->get();
+        $beritas = Berita::latest()->take(6)->get(); // Ambil 6 berita terbaru
 
-        return view('fe.master', compact('obyekWisatas', 'paketWisatas', 'penginapans'));
+        return view('fe.master', compact('obyekWisatas', 'paketWisatas', 'penginapans', 'beritas'));
     }
 
     /**

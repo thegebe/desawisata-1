@@ -13,7 +13,7 @@ class Berita extends Model
     protected $fillable = [
         'judul',
         'berita',
-        'tgl_post',
+        'tgl_post' => 'datetime',
         'id_kategori_beritas',
         'foto'
     ];
