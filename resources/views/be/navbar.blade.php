@@ -1,4 +1,4 @@
-    <div class="header">
+<div class="header">
             <div class="header-content">
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
@@ -100,3 +100,13 @@
                 </nav>
             </div>
         </div>
+
+<style>
+.header {
+    background: transparent;
+    /* ... */
+}
+.header.scrolled, .header.header-scrolled {
+    background: #fff; /* atau warna lain */
+}
+</style>

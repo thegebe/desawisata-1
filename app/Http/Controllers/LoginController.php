@@ -15,32 +15,27 @@ class LoginController extends Controller
         return view('be.login');
     }
 
-    function login(Request $request){
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ],[
-            'email.required' => 'Email Wajib Diisi',
-            'password.required' => 'Password Wajib Diisi'
+    public function showLoginForm()
+    {
+        return view('be.login');
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        $infologin = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-
-        if(Auth::attempt($infologin)){
-            if(Auth::user()->level == 'admin'){
-                return redirect('/admin');
-        }elseif(Auth::user()->level == 'owner'){
-                return redirect('/owner');
-        }elseif(Auth::user()->level == 'bendahara'){
-                return redirect('/bendahara');
-        }
-        }else{
-            return redirect('')->withErrors('Email atau Password Salah')->withInput();
+        if (Auth::attempt($credentials, $request->has('remember'))) {
+            $request->session()->regenerate();
+            // Redirect ke halaman utama FE
+            return redirect('/');
         }
 
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->withInput();
     }
 
     public function logout(Request $request)
@@ -48,8 +43,7 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-    
-        return redirect('/home')->with('success', 'Anda telah logout');
+        return redirect('/');
     }
 
     /**

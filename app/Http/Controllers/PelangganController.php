@@ -23,7 +23,7 @@ class PelangganController extends Controller
      */
     public function create()
     {
-        $users = User::where('level', 'pelanggan')->get(); // Hanya user dengan level 'pelanggan'
+        $users = User::where('level', 'pelanggan')->get();
         return view('pelanggan.create', compact('users'));
     }
 
@@ -40,23 +40,13 @@ class PelangganController extends Controller
             'id_user' => 'required|exists:users,id',
         ]);
 
-        $data = $validated;
-
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('pelanggan', 'public');
+            $validated['foto'] = $request->file('foto')->store('pelanggan', 'public');
         }
 
-        Pelanggan::create($data);
+        Pelanggan::create($validated);
 
         return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil ditambahkan!');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pelanggan $pelanggan)
-    {
-        return view('pelanggan.edit', compact('pelanggan'));
     }
 
     /**
@@ -71,16 +61,14 @@ class PelangganController extends Controller
             'foto' => 'nullable|image|max:5120',
         ]);
 
-        $data = $validated;
-
         if ($request->hasFile('foto')) {
             if ($pelanggan->foto) {
                 Storage::disk('public')->delete($pelanggan->foto);
             }
-            $data['foto'] = $request->file('foto')->store('pelanggan', 'public');
+            $validated['foto'] = $request->file('foto')->store('pelanggan', 'public');
         }
 
-        $pelanggan->update($data);
+        $pelanggan->update($validated);
 
         return redirect()->route('pelanggan.index')->with('success', 'Pelanggan berhasil diperbarui!');
     }

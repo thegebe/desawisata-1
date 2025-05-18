@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ObyekWisataController;
+use Illuminate\Support\Facades\Auth;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -9,7 +10,11 @@ use App\Http\Controllers\ObyekWisataController;
 
 Route::resource('/', App\Http\Controllers\HomeController::class);
 // Route::resource('/home', App\Http\Controllers\HomeController::class);
-Route::resource('/register', App\Http\Controllers\RegisterController::class);
+// Route::resource('/register', App\Http\Controllers\RegisterController::class);
+
+Route::get('/register', [App\Http\Controllers\RegisterController::class, 'index'])->name('register');
+Route::post('/register', [App\Http\Controllers\RegisterController::class, 'store']);
+
 Route::resource('/resetpassword', App\Http\Controllers\ResetPasswordController::class);
 Route::resource('/bendahara', App\Http\Controllers\BendaharaController::class);
 Route::resource('/owner', App\Http\Controllers\OwnerController::class);
@@ -39,7 +44,11 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->middleware('userAkses:admin');
     Route::get('/bendahara', [App\Http\Controllers\BendaharaController::class, 'index'])->middleware('userAkses:bendahara');
     Route::get('/owner', [App\Http\Controllers\OwnerController::class, 'index'])->middleware('userAkses:owner');
-    Route::get('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
+    
+    Route::post('/logout', function() {
+        Auth::logout();
+        return redirect('/');
+    })->name('logout');
 });
 
 ?>
