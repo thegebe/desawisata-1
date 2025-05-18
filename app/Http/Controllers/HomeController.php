@@ -15,12 +15,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $obyekWisatas = ObyekWisata::with('kategoriWisata')->latest()->get();
-        $paketWisatas = PaketWisata::latest()->get();
-        $penginapans  = Penginapan::latest()->get();
-        $beritas = Berita::latest()->take(6)->get(); // Ambil 6 berita terbaru
+        // $obyekWisatas = ObyekWisata::with('kategoriWisata')->latest()->get();
+        // $paketWisatas = PaketWisata::latest()->get();
+        // $penginapans  = Penginapan::latest()->get();
+        // $beritas = Berita::latest()->take(6)->get(); // Ambil 6 berita terbaru
 
-        return view('fe.master', compact('obyekWisatas', 'paketWisatas', 'penginapans', 'beritas'));
+        // return view('fe.master', compact('obyekWisatas', 'paketWisatas', 'penginapans', 'beritas'));
+
+        // Ambil data dari database
+        $data = [
+            'obyekWisatas' => ObyekWisata::with('kategoriWisata')->get(),
+            'paketWisatas' => PaketWisata::latest()->get(),
+            'penginapans' => Penginapan::latest()->get(),
+            'beritas' => Berita::with('kategoriBerita')->latest()->limit(4)->get(),
+        ];
+
+        return view('fe.master', $data);
     }
 
     /**

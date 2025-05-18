@@ -35,33 +35,33 @@
                                         
                                         <!-- User Fields -->
                                         <div class="form-group">
-                                            <label><strong>Full Name</strong></label>
-                                            <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Enter your full name" required>
+                                            <label><strong>Nama Lengkap</strong></label>
+                                            <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="Masukkan Nama Lengkap Anda" required>
                                         </div>
                                         <div class="form-group">
                                             <label><strong>Email</strong></label>
-                                            <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Enter your email" required>
+                                            <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Masukkan Email Anda" required>
                                         </div>
                                         <div class="form-group">
                                             <label><strong>Password</strong></label>
-                                            <input type="password" class="form-control" name="password" placeholder="Create your password" required>
+                                            <input type="password" class="form-control" name="password" placeholder="Buat Password Anda" required>
                                         </div>
                                         <div class="form-group">
-                                            <label><strong>Confirm Password</strong></label>
-                                            <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm your password" required>
+                                            <label><strong>Konfirmasi Password</strong></label>
+                                            <input type="password" class="form-control" name="password_confirmation" placeholder="Konfirmasi Password Anda" required>
                                         </div>
                                         
                                         <!-- Pelanggan Fields -->
                                         <div class="form-group">
-                                            <label><strong>Phone Number</strong></label>
-                                            <input type="tel" class="form-control" name="no_hp" value="{{ old('no_hp') }}" placeholder="Enter your phone number" required>
+                                            <label><strong>Nomor Telepon</strong></label>
+                                            <input type="tel" class="form-control" name="no_hp" value="{{ old('no_hp') }}" placeholder="Nomor Telepon Aktif" required>
                                         </div>
                                         <div class="form-group">
-                                            <label><strong>Address</strong></label>
-                                            <textarea class="form-control" name="alamat" placeholder="Enter your address" required>{{ old('alamat') }}</textarea>
+                                            <label><strong>Alamat</strong></label>
+                                            <textarea class="form-control" name="alamat" placeholder="Masukkan Alamat Anda" required>{{ old('alamat') }}</textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label><strong>Profile Photo</strong></label>
+                                            <label><strong>Masukkan Foto Profil</strong></label>
                                             <input type="file" class="form-control" name="foto">
                                         </div>
 
@@ -71,6 +71,9 @@
                                     </form>
                                     <div class="new-account mt-3">
                                         <p>Already have an account? <a class="text-primary" href="{{ route('login') }}">Sign in</a></p>
+                                    </div>
+                                    <div class="new-account mt-3">
+                                        <p>Kembali Menuju <a class="text-primary" href="/">Home</a></p>
                                     </div>
                                 </div>
                             </div>

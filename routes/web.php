@@ -24,7 +24,7 @@ Route::resource('/obyekwisata', App\Http\Controllers\ObyekWisataController::clas
 Route::resource('/users', App\Http\Controllers\UsersController::class);
 Route::resource('/pelanggan', App\Http\Controllers\PelangganController::class);
 Route::resource('/paketwisata', App\Http\Controllers\PaketWisataController::class);
-Route::resource('/reservasi', App\Http\Controllers\ReservasiController::class);
+Route::resource('/reservasi', App\Http\Controllers\ReservasiController::class)->middleware('auth');
 Route::resource('/karyawan', App\Http\Controllers\KaryawanController::class);
 Route::resource('/kategoriberita', App\Http\Controllers\KategoriBeritaController::class);
 Route::resource('/kategoriwisata', App\Http\Controllers\KategoriWisataController::class);

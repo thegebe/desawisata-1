@@ -113,16 +113,16 @@
                 <div class="mb-3 row">
                   <label class="col-md-4 col-form-label">Nama Lengkap</label>
                   <div class="col-md-8">
-                    <input type="text" class="form-control"
-                      value="{{ Auth::user()->pelanggan->nama_lengkap ?? '' }}" readonly>
+                    <input type="text" class="form-control" 
+                        value="{{ Auth::user()->pelanggan->nama_lengkap ?? Auth::user()->name }}" readonly>
                   </div>
                 </div>
 
                 <div class="mb-3 row">
                   <label class="col-md-4 col-form-label">No HP</label>
                   <div class="col-md-8">
-                    <input type="text" class="form-control"
-                      value="{{ Auth::user()->pelanggan->no_hp ?? '' }}" readonly>
+                    <input type="text" class="form-control" 
+                        value="{{ Auth::user()->pelanggan->no_hp ?? '-' }}" readonly>
                   </div>
                 </div>
 
