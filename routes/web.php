@@ -28,6 +28,8 @@ Route::resource('/reservasi', App\Http\Controllers\ReservasiController::class)->
 Route::resource('/karyawan', App\Http\Controllers\KaryawanController::class);
 Route::resource('/kategoriberita', App\Http\Controllers\KategoriBeritaController::class);
 Route::resource('/kategoriwisata', App\Http\Controllers\KategoriWisataController::class);
+Route::resource('/diskon', App\Http\Controllers\DiskonController::class);
+Route::resource('/voucher', App\Http\Controllers\VoucherController::class);
 
 Route::middleware(['guest'])->group(function(){
     Route::get('/login', [App\Http\Controllers\LoginController::class, 'index'])->name('login');

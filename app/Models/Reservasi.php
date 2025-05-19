@@ -33,4 +33,9 @@ class Reservasi extends Model
     {
         return $this->belongsTo(PaketWisata::class, 'id_paket');
     }
+
+    public function diskon()
+    {
+        return $this->belongsTo(Diskon::class);
+    }
 }

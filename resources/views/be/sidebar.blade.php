@@ -63,6 +63,13 @@
                 </a>
             </li>
 
+            <li class="nav-label first">Voucher</li>
+            <li>
+                <a href="{{ route ('voucher.index') }}" aria-expanded="false">
+                    <i class="bi bi-credit-card-2-front-fill"></i><span class="nav-text">Kelola Voucher</span>
+                </a>
+            </li>
+
         </ul>
     </div>
 </div>
