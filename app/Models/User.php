@@ -51,4 +51,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(Pelanggan::class, 'id_user'); 
     }
+
 }

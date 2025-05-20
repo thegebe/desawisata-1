@@ -5,65 +5,52 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Desa Arborek Papua</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
 
-  <!-- Favicons -->
-  <link href="{{ asset('fe/assets/img/icon-big.png') }}" rel="icon">
-  <link href="{{ asset('fe/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="{{ asset('fe/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ asset('fe/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-  <link href="{{ asset('fe/assets/vendor/aos/aos.css') }}" rel="stylesheet">
-  <link href="{{ asset('fe/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('fe/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
-  <!-- Main CSS File -->
-  <link href="{{ asset('fe/assets/css/main.css') }}" rel="stylesheet">
-  
   <style>
+    body {
+      background-color: #f5f5f5;
+    }
 
-    /* Improved form styling */
     .reservation-form {
       border-radius: 10px;
       overflow: hidden;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .form-header {
-      background: linear-gradient(135deg,rgb(255, 77, 0) 0%,rgb(255, 89, 0) 100%);
+      background: linear-gradient(135deg, #ff6b6b 0%, #f7b733 100%);
       color: white;
       padding: 20px;
       text-align: center;
     }
-    
+
     .form-body {
       padding: 30px;
-      background-color: #f8f9fa;
     }
-    
-    .form-control, .form-select {
+
+    .form-control,
+    .form-select {
       border-radius: 5px;
       padding: 10px 15px;
       border: 1px solid #ced4da;
       transition: all 0.3s;
     }
-    
-    .form-control:focus, .form-select:focus {
-      border-color: #80bdff;
-      box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 0.25rem rgba(255, 107, 107, 0.25);
     }
-    
+
     .form-label {
       font-weight: 600;
       color: #495057;
     }
-    
+
     .btn-submit {
       background: linear-gradient(135deg, #007bff 0%, #00a1ff 100%);
       border: none;
@@ -71,42 +58,47 @@
       font-weight: 600;
       transition: all 0.3s;
     }
-    
+
     .btn-submit:hover {
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
     }
-    
+
     .price-display {
       background-color: #f1f8ff;
       border-left: 4px solid #007bff;
       padding: 10px 15px;
       font-weight: 600;
     }
-    
+
     .readonly-field {
       background-color: #e9ecef;
       cursor: not-allowed;
     }
 
     .body {
-      background-color:rgba(179, 179, 179, 0.32);
-   }
+      background-color: rgba(179, 179, 179, 0.32);
+    }
+    
+    .voucher-status {
+      margin-top: 5px;
+      font-size: 0.875rem;
+    }
+    
+    .voucher-valid {
+      color: #28a745;
+    }
+    
+    .voucher-invalid {
+      color: #dc3545;
+    }
   </style>
 </head>
 
 <body class="body">
 
   <header id="header" class="header d-flex align-items-center fixed-top">
-    <!-- <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
-      <a href="{{ url('/') }}" class="logo d-flex align-items-center me-auto">
-        <h1 class="sitename">Desa Arborek</h1>
-      </a> -->
-
-     <nav>@include('fe.navbar')</nav>
-
-    </div>
+    <nav>@include('fe.navbar')</nav>
   </header>
 
   <main id="main" class="mt-5 pt-5">
@@ -118,7 +110,7 @@
               <h4 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Form Reservasi Wisata</h4>
             </div>
             <div class="form-body">
-              <form method="POST" action="{{ route('reservasi.store') }}" enctype="multipart/form-data">
+              <form method="POST" action="{{ route('reservasi.store') }}" enctype="multipart/form-data" id="reservasiForm">
                 @csrf
 
                 <!-- Data Pelanggan -->
@@ -130,8 +122,8 @@
                         <span class="text-muted">Nama Lengkap</span>
                       </div>
                       <div class="col-md-8">
-                        <input type="text" class="form-control readonly-field" 
-                            value="{{ Auth::user()->pelanggan->nama_lengkap ?? Auth::user()->name }}" readonly>
+                        <input type="text" class="form-control readonly-field"
+                          value="{{ auth()->user() ? (auth()->user()->pelanggan->nama_lengkap ?? auth()->user()->name) : 'Guest' }}" readonly>
                       </div>
                     </div>
                     <div class="row">
@@ -139,8 +131,8 @@
                         <span class="text-muted">No HP</span>
                       </div>
                       <div class="col-md-8">
-                        <input type="text" class="form-control readonly-field" 
-                            value="{{ Auth::user()->pelanggan->no_hp ?? '-' }}" readonly>
+                        <input type="text" class="form-control readonly-field"
+                          value="{{ auth()->user() ? (auth()->user()->pelanggan->no_hp ?? '-') : '-' }}" readonly>
                       </div>
                     </div>
                   </div>
@@ -152,9 +144,9 @@
                   <select name="id_paket" id="id_paket" class="form-select" required>
                     <option value="">-- Pilih Paket --</option>
                     @foreach($pakets as $paket)
-                      <option value="{{ $paket->id }}" data-harga="{{ $paket->harga_per_pack }}">
-                        {{ $paket->nama_paket }} - Rp {{ number_format($paket->harga_per_pack) }}
-                      </option>
+                    <option value="{{ $paket->id }}" data-harga="{{ $paket->harga_per_pack }}">
+                      {{ $paket->nama_paket }} - Rp {{ number_format($paket->harga_per_pack) }}
+                    </option>
                     @endforeach
                   </select>
                 </div>
@@ -163,7 +155,7 @@
                 <div class="mb-4">
                   <label for="tgl_reservasi_wisata" class="form-label">Tanggal Reservasi</label>
                   <input type="datetime-local" name="tgl_reservasi_wisata" id="tgl_reservasi_wisata"
-                    class="form-control" min="{{ date('Y-m-d\TH:i') }}" required>
+                    class="form-control" min="{{ date('Y-m-d') }}" required>
                 </div>
 
                 <!-- Jumlah Peserta -->
@@ -171,6 +163,15 @@
                   <label for="jumlah_peserta" class="form-label">Jumlah Peserta</label>
                   <input type="number" name="jumlah_peserta" id="jumlah_peserta"
                     class="form-control" min="1" required>
+                </div>
+
+                <!-- Kode Voucher -->
+                <div class="mb-4">
+                  <label for="voucher_code" class="form-label">Kode Voucher (Opsional)</label>
+                  <input type="text" name="voucher_code" id="voucher_code" class="form-control" 
+                         placeholder="Masukkan kode voucher jika ada">
+                  <div id="voucherStatus" class="voucher-status"></div>
+                  <input type="hidden" name="diskon" id="diskon_hidden" value="0">
                 </div>
 
                 <!-- Informasi Pembayaran -->
@@ -185,25 +186,16 @@
                         <input type="text" id="harga_paket" class="form-control price-display readonly-field" readonly>
                       </div>
                     </div>
-                    
+
                     <div class="row mb-2">
                       <div class="col-md-4">
-                        <span class="text-muted">Diskon (%)</span>
-                      </div>
-                      <div class="col-md-8">
-                        <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="0">
-                      </div>
-                    </div>
-                    
-                    <div class="row mb-2">
-                      <div class="col-md-4">
-                        <span class="text-muted">Nilai Diskon</span>
+                        <span class="text-muted">Diskon</span>
                       </div>
                       <div class="col-md-8">
                         <input type="text" id="nilai_diskon" class="form-control price-display readonly-field" readonly>
                       </div>
                     </div>
-                    
+
                     <div class="row">
                       <div class="col-md-4">
                         <span class="text-muted fw-bold">Total Bayar</span>
@@ -227,6 +219,15 @@
                     <i class="bi bi-send-check me-2"></i>Submit Reservasi
                   </button>
                 </div>
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                  <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                  </ul>
+                </div>
+                @endif
               </form>
             </div>
           </div>
@@ -235,26 +236,59 @@
     </div>
   </main>
 
-  <!-- Vendor JS Files -->
   <script src="{{ asset('fe/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('fe/assets/vendor/aos/aos.js') }}"></script>
-  <script src="{{ asset('fe/assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
-  <script src="{{ asset('fe/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
   <script src="{{ asset('fe/assets/js/main.js') }}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const paketSelect = document.getElementById('id_paket');
       const jumlahPeserta = document.getElementById('jumlah_peserta');
-      const diskonInput = document.getElementById('diskon');
+      const voucherCode = document.getElementById('voucher_code');
       const hargaPaket = document.getElementById('harga_paket');
       const nilaiDiskon = document.getElementById('nilai_diskon');
       const totalBayar = document.getElementById('total_bayar');
+      const voucherStatus = document.getElementById('voucherStatus');
+      const diskonHidden = document.getElementById('diskon_hidden');
+      
+      let currentVoucher = null;
 
+      // Fungsi untuk validasi voucher
+      async function validateVoucher(code) {
+        if (!code) {
+          voucherStatus.textContent = '';
+          currentVoucher = null;
+          return;
+        }
+        
+        try {
+          const response = await fetch('/api/validate-voucher?code=' + encodeURIComponent(code));
+          const data = await response.json();
+          
+          if (data.valid) {
+            voucherStatus.textContent = 'Voucher valid: ' + data.diskon + '% diskon';
+            voucherStatus.className = 'voucher-status voucher-valid';
+            currentVoucher = data;
+          } else {
+            voucherStatus.textContent = 'Voucher tidak valid atau sudah kadaluarsa';
+            voucherStatus.className = 'voucher-status voucher-invalid';
+            currentVoucher = null;
+          }
+        } catch (error) {
+          console.error('Error validating voucher:', error);
+          voucherStatus.textContent = 'Gagal memvalidasi voucher';
+          voucherStatus.className = 'voucher-status voucher-invalid';
+          currentVoucher = null;
+        }
+        
+        calculateTotal();
+      }
+
+      // Fungsi hitung total
       function calculateTotal() {
         const harga = parseInt(paketSelect.selectedOptions[0]?.dataset.harga || 0);
         const peserta = parseInt(jumlahPeserta.value || 0);
-        const diskon = parseFloat(diskonInput.value || 0);
+        const diskon = currentVoucher ? currentVoucher.diskon : 0;
 
         const subtotal = harga * peserta;
         const diskonValue = subtotal * (diskon / 100);
@@ -263,6 +297,7 @@
         hargaPaket.value = formatRupiah(subtotal);
         nilaiDiskon.value = formatRupiah(diskonValue);
         totalBayar.value = formatRupiah(total);
+        diskonHidden.value = diskon;
         document.querySelector('input[name="total_bayar"]').value = total;
       }
 
@@ -271,17 +306,31 @@
         return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       }
 
+      // Event listeners
       paketSelect.addEventListener('change', calculateTotal);
       jumlahPeserta.addEventListener('input', calculateTotal);
-      diskonInput.addEventListener('input', calculateTotal);
       
-      // Initialize calculation on page load if values exist
+      // Validasi voucher saat kode diubah
+      voucherCode.addEventListener('change', function() {
+        validateVoucher(this.value);
+      });
+      
+      // Validasi voucher saat form disubmit
+      document.getElementById('reservasiForm').addEventListener('submit', function(e) {
+        if (voucherCode.value && !currentVoucher) {
+          e.preventDefault();
+          alert('Voucher tidak valid. Silakan periksa kembali kode voucher Anda.');
+        }
+      });
+
+      // Initialize calculation on page load
       calculateTotal();
     });
   </script>
 
-@section('footer')
-    @include('fe.footer')
-@endsection
+  @section('footer')
+  @include('fe.footer')
+  @endsection
 </body>
+
 </html>

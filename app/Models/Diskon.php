@@ -2,24 +2,35 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Diskon extends Model
 {
-    protected $table = 'diskon';
+    use HasFactory;
 
+    protected $table = 'diskons';
     protected $fillable = [
-        'kode',
         'nama_promo',
-        'deskripsi',
-        'nilai',
-        'tipe',
-        'min_transaksi',
+        'kode',
+        'detail_promo',
         'tanggal_mulai',
         'tanggal_berakhir',
+        'minimal_transaksi',
+        'jenis_diskon',
+        'nilai_diskon',
+        'maksimal_diskon',
         'kuota',
         'digunakan'
     ];
 
-    protected $dates = ['tanggal_mulai', 'tanggal_berakhir'];
+    public function reservasis()
+    {
+        return $this->hasMany(Reservasi::class);
+    }
+
+    public function isValid()
+    {
+        return $this->tanggal_berakhir >= now() && $this->digunakan < $this->kuota;
+    }
 }

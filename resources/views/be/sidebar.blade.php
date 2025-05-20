@@ -58,15 +58,15 @@
 
             <li class="nav-label first">Reservasi</li>
             <li>
-                <a href="{{ route ('reservasi.index') }}" aria-expanded="false">
-                    <i class="bi bi-credit-card-2-front-fill"></i><span class="nav-text">Kelola Reservasi</span>
+                <a href="{{ route ('konfirmasireservasi.index') }}" aria-expanded="false">
+                    <i class="bi bi-credit-card-2-front-fill"></i><span class="nav-text">Konfirmasi Reservasi</span>
                 </a>
             </li>
 
             <li class="nav-label first">Voucher</li>
             <li>
                 <a href="{{ route ('voucher.index') }}" aria-expanded="false">
-                    <i class="bi bi-credit-card-2-front-fill"></i><span class="nav-text">Kelola Voucher</span>
+                    <i class="bi bi-ticket-detailed"></i><span class="nav-text">Kelola Voucher</span>
                 </a>
             </li>
 

@@ -1,3 +1,7 @@
+<?php
+use Illuminate\Support\Str;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -350,9 +354,9 @@
                 <p class="description">{{ Str::limit($berita->berita, 150) }}</p>
                 <small class="text-muted">
                   @if(is_string($berita->tgl_post))
-                    {{ \Carbon\Carbon::parse($berita->tgl_post)->format('d M Y') }}
+                  {{ \Carbon\Carbon::parse($berita->tgl_post)->format('d M Y') }}
                   @else
-                    {{ $berita->tgl_post->format('d M Y') }}
+                  {{ $berita->tgl_post->format('d M Y') }}
                   @endif
                 </small>
               </div>
@@ -380,9 +384,9 @@
                       <p class="text-muted mb-3">
                         <i class="bi bi-calendar me-2"></i>
                         @if(is_string($berita->tgl_post))
-                          {{ \Carbon\Carbon::parse($berita->tgl_post)->format('l, d F Y') }}
+                        {{ \Carbon\Carbon::parse($berita->tgl_post)->format('l, d F Y') }}
                         @else
-                          {{ $berita->tgl_post->format('l, d F Y') }}
+                        {{ $berita->tgl_post->format('l, d F Y') }}
                         @endif
                       </p>
                       <p><b>Kategori:</b> {{ $berita->kategoriBerita->kategori_berita ?? 'Tidak ada kategori' }}</p>
@@ -517,5 +521,9 @@
   <script src="fe/assets/js/main.js"></script>
 
 </body>
+
+<footer>
+  @include('fe.footer')
+</footer>
 
 </html>

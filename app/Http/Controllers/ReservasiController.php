@@ -2,109 +2,162 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Reservasi;
 use App\Models\PaketWisata;
 use App\Models\Pelanggan;
-use App\Models\Reservasi;
+use App\Models\Diskon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ReservasiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan halaman reservasi frontend
      */
     public function index()
     {
-        // Cek apakah user sudah memiliki data pelanggan
-        if (Auth::check() && !Auth::user()->pelanggan) {
-        // Buat data pelanggan default jika belum ada
-        Pelanggan::create([
-            'id_user' => Auth::id(),
-            'nama_lengkap' => Auth::user()->name,
-            'no_hp' => '-', // Default value
-            'alamat' => '-',
-            'foto' => null,
-        ]);
-    }
-
-    $pakets = PaketWisata::all();
-    return view('fe.reservasi', compact('pakets'));
-        // $pakets = PaketWisata::all();
-        // return view('fe.reservasi', compact('pakets'));
+        $pakets = PaketWisata::all();
+        return view('fe.reservasi', compact('pakets'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form reservasi
      */
     public function create()
     {
+        // Pastikan user sudah login
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
         $pakets = PaketWisata::all();
-        return view('fe.reservasi', compact('pakets'));
+        return view('reservasi.create', compact('pakets'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data reservasi baru
      */
     public function store(Request $request)
     {
-        // Jika belum login, redirect ke halaman login
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu!');
-        }
-        // mastiian user sudah login
-        if (Auth::check() && !Auth::user()->pelanggan) {
-        Pelanggan::create([
-            'id_user' => Auth::id(),
-            'nama_lengkap' => $request->input('nama_lengkap'), // Ambil dari form
-            'no_hp' => $request->input('no_hp'),
-            'alamat' => '-', // Default atau ambil dari form
-            'foto' => null,
-        ]);
-        }
-
-        // Jika sudah login tetapi belum ada data pelanggan, buat data default
-        if (!Auth::user()->pelanggan) {
-        Pelanggan::create([
-            'id_user' => Auth::id(),
-            'nama_lengkap' => Auth::user()->name,
-            'no_hp' => '-',
-            'alamat' => '-',
+        // Validasi input
+        $validated = $request->validate([
+            'id_paket' => 'required|exists:paket_wisatas,id',
+            'tgl_reservasi_wisata' => 'required|date|after_or_equal:today',
+            'jumlah_peserta' => 'required|integer|min:1',
+            'voucher_code' => 'nullable|exists:vouchers,kode', // Ubah validasi voucher
+            'file_bukti_tf' => 'required|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
-        $pakets = PaketWisata::all();
-        return view('fe.reservasi', compact('pakets'));
-    }
+        try {
+            // Hitung total bayar
+            $paket = PaketWisata::findOrFail($request->id_paket);
+            $harga = $paket->harga_per_pack;
+            $subtotal = $harga * $request->jumlah_peserta;
+
+            // Hitung diskon jika ada voucher
+            $nilai_diskon = 0;
+            if ($request->voucher_code) {
+                $voucher = Voucher::where('kode', $request->voucher_code)->first();
+                if ($voucher) {
+                    $nilai_diskon = $subtotal * ($voucher->nilai_diskon / 100);
+                }
+            }
+
+            $total_bayar = $subtotal - $nilai_diskon;
+
+            // Simpan file bukti transfer
+            $filePath = $request->file('file_bukti_tf')->store('bukti_transfer');
+
+            // Buat reservasi baru
+            $reservasi = Reservasi::create([
+                'id_pelanggan' => auth()->user()->pelanggan->id,
+                'id_paket' => $request->id_paket,
+                'tgl_reservasi_wisata' => $request->tgl_reservasi_wisata,
+                'harga' => $harga,
+                'jumlah_peserta' => $request->jumlah_peserta,
+                'diskon' => $request->diskon,
+                'nilai_diskon' => $nilai_diskon,
+                'total_bayar' => $total_bayar,
+                'file_bukti_tf' => $filePath,
+                'status_reservasi_wisata' => 'menunggu_verifikasi',
+            ]);
+
+            return redirect()->route('reservasi.show', $reservasi->id)
+                ->with('success', 'Reservasi berhasil dibuat!');
+        } catch (\Exception $e) {
+            return back()->withInput()
+                ->with('error', 'Gagal membuat reservasi: ' . $e->getMessage());
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan detail reservasi
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $reservasi = Reservasi::with(['paketWisata', 'pelanggan'])
+            ->findOrFail($id);
+
+        // Pastikan hanya pemilik atau admin yang bisa melihat
+        if (
+            auth()->user()->role !== 'admin' &&
+            auth()->user()->pelanggan->id !== $reservasi->id_pelanggan
+        ) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('reservasi.show', compact('reservasi'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan riwayat reservasi user
      */
-    public function edit(string $id)
+    public function riwayat()
     {
-        //
+        $reservasis = Reservasi::with('paketWisata')
+            ->where('id_pelanggan', auth()->user()->pelanggan->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('fe.riwayatreservasi', compact('reservasis'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Menampilkan riwayat reservasi untuk satu reservasi spesifik
      */
-    public function update(Request $request, string $id)
+    public function showRiwayat($id)
     {
-        //
+        $reservasi = Reservasi::with(['paketWisata', 'pelanggan'])
+            ->findOrFail($id);
+
+        // Pastikan hanya pemilik atau admin yang bisa melihat
+        if (
+            auth()->user()->role !== 'admin' &&
+            auth()->user()->pelanggan->id !== $reservasi->id_pelanggan
+        ) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('reservasi.show_riwayat', compact('reservasi'));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Update status reservasi (untuk admin)
      */
-    public function destroy(string $id)
+    public function updateStatus(Request $request, $id)
     {
-        //
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $request->validate([
+            'status_reservasi_wisata' => 'required|in:menunggu_verifikasi,dikonfirmasi,dibatalkan'
+        ]);
+
+        $reservasi = Reservasi::findOrFail($id);
+        $reservasi->update(['status_reservasi_wisata' => $request->status_reservasi_wisata]);
+
+        return back()->with('success', 'Status reservasi berhasil diupdate');
     }
 }

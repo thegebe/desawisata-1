@@ -60,7 +60,7 @@
                                         <p>Don't have an account? <a class="text-primary" href="register">Sign up</a></p>
                                     </div>
                                     <div class="new-account mt-3">
-                                        <p>Stay Logout by Accessing <a class="text-primary" href="{{ url('/home') }}">Home Page</a></p>
+                                        <p>Stay Logout by Accessing <a class="text-primary" href="{{ url('/') }}">Home Page</a></p>
                                     </div>
                                 </div>
                             </div>

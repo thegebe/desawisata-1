@@ -1,5 +1,10 @@
+@php
+use Illuminate\Support\Facades\Auth;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -32,7 +37,7 @@
       position: relative;
       display: inline-block;
     }
-    
+
     .profile-btn {
       background: none;
       border: 2px solid #fff;
@@ -46,24 +51,24 @@
       transition: all 0.3s ease;
       margin-left: 20px;
     }
-    
+
     .profile-btn:hover {
       background-color: #fff;
       color: #333;
     }
-    
+
     .profile-dropdown-content {
       display: none;
       position: absolute;
       right: 0;
       background-color: #fff;
       min-width: 180px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
       z-index: 1;
       border-radius: 8px;
       margin-top: 8px;
     }
-    
+
     .profile-dropdown-content a {
       color: #333;
       padding: 12px 16px;
@@ -71,32 +76,32 @@
       display: block;
       border-bottom: 1px solid #eee;
     }
-    
+
     .profile-dropdown-content a:hover {
       background-color: #f5f5f5;
     }
-    
+
     .profile-dropdown-content a:last-child {
       border-bottom: none;
       color: #dc3545;
     }
-    
+
     .profile-dropdown:hover .profile-dropdown-content {
       display: block;
     }
-    
+
     .user-info {
       padding: 12px 16px;
       border-bottom: 2px solid #eee;
       background-color: #f8f9fa;
     }
-    
+
     .user-info .username {
       font-weight: bold;
       margin-bottom: 4px;
       color: #333;
     }
-    
+
     .user-info .user-email {
       font-size: 12px;
       color: #666;
@@ -105,71 +110,72 @@
 </head>
 
 <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-        <a href="#home" class="logo d-flex align-items-center me-auto">
-            <!-- Uncomment the line below if you also wish to use an image logo -->
-            <!-- <img src="assets/img/logo.png" alt=""> -->
-            <h1 class="sitename">Desa Arborek</h1>
-        </a>
+    <a href="#home" class="logo d-flex align-items-center me-auto">
+      <!-- Uncomment the line below if you also wish to use an image logo -->
+      <!-- <img src="assets/img/logo.png" alt=""> -->
+      <h1 class="sitename">Desa Arborek</h1>
+    </a>
 
-        <nav id="navmenu" class="navmenu">
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <li><a href="{{ url('/') }}#home" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
+        <li><a href="{{ url('/') }}#wisata">Wisata</a></li>
+        <li><a href="{{ url('/') }}#paket_wisata">Paket Wisata</a></li>
+        <li><a href="{{ url('/') }}#penginapan">Penginapan</a></li>
+        <li><a href="{{ url('/') }}#berita">Berita</a></li>
+        <li class="dropdown">
+          <a href="#"><span>SELENGKAPNYA</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
-              <li><a href="{{ url('/') }}#home" class="{{ request()->is('/') ? 'active' : '' }}">Home</a></li>
-              <li><a href="{{ url('/') }}#wisata">Wisata</a></li>
-              <li><a href="{{ url('/') }}#paket_wisata">Paket Wisata</a></li>
-              <li><a href="{{ url('/') }}#penginapan">Penginapan</a></li>
-              <li><a href="{{ url('/') }}#berita">Berita</a></li>
-              <li class="dropdown">
-                  <a href="#"><span>SELENGKAPNYA</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                  <ul>
-                      <li><a href="/reservasi" class="{{ request()->is('reservasi') ? 'active' : '' }}">RESERVASI</a></li>
-                      <li><a href="{{ route('diskon.index') }}" class="{{ request()->is('diskon*') ? 'active' : '' }}">VOUCHER</a></li>
-                  </ul>
-              </li>
+            <li><a href="/reservasi" class="{{ request()->is('reservasi') ? 'active' : '' }}">RESERVASI</a></li>
+            <li><a href="/diskon" class="{{ request()->is('diskon*') ? 'active' : '' }}">VOUCHER</a></li>
           </ul>
-          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
+        </li>
+      </ul>
+      <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+    </nav>
 
-        <!-- Authentication Section -->
-        @auth
-            <!-- Profile dropdown when user is logged in -->
-            <div class="profile-dropdown">
-                <button class="profile-btn">
-                    <i class="bi bi-person-circle"></i>
-                    {{ Auth::user()->name }}
-                    <i class="bi bi-chevron-down"></i>
-                </button>
-                <div class="profile-dropdown-content">
-                    <div class="user-info">
-                        <div class="username">{{ Auth::user()->name }}</div>
-                        <div class="user-email">{{ Auth::user()->email }}</div>
-                    </div>
-                    <a href="/profile"><i class="bi bi-person me-2"></i>Profile</a>
-                    @if(Auth::user()->role === 'admin')
-                        <a href="/admin"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-                    @elseif(Auth::user()->role === 'bendahara')
-                        <a href="/bendahara"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-                    @elseif(Auth::user()->role === 'owner')
-                        <a href="/owner"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
-                    @endif
-                    <a href="/reservasi"><i class="bi bi-calendar-check me-2"></i>My Reservations</a>
-                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="bi bi-box-arrow-right me-2"></i>Logout
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
-            </div>
-        @else
-            <!-- Sign In and Sign Up buttons when user is not logged in -->
-            <a class="cta-btn" href="/login">Sign In</a>
-            <a class="cta-btn" href="/register">Sign Up</a>
-        @endauth
-
+    <!-- Authentication Section -->
+    @auth
+    <!-- Profile dropdown when user is logged in -->
+    <div class="profile-dropdown">
+      <button class="profile-btn">
+        <i class="bi bi-person-circle"></i>
+        {{ auth()->user()->name }}
+        <i class="bi bi-chevron-down"></i>
+      </button>
+      <div class="profile-dropdown-content">
+        <div class="user-info">
+          <div class="username">{{ auth()->user()->name }}</div>
+          <div class="user-email">{{ auth()->user()->email }}</div>
+        </div>
+        <a href="/profile"><i class="bi bi-person me-2"></i>Profile</a>
+        @if(auth()->user()->role === 'admin')
+        <a href="/admin"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+        @elseif(auth()->user()->role === 'bendahara')
+        <a href="/bendahara"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+        @elseif(auth()->user()->role === 'owner')
+        <a href="/owner"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+        @endif
+        <a href="/reservasi"><i class="bi bi-calendar-check me-2"></i>My Reservations</a>
+        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+          <i class="bi bi-box-arrow-right me-2"></i>Logout
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+          @csrf
+        </form>
+      </div>
     </div>
+    @else
+    <!-- Sign In and Sign Up buttons when user is not logged in -->
+    <a class="cta-btn" href="/login">Sign In</a>
+    <a class="cta-btn" href="/register">Sign Up</a>
+    @endauth
+
+  </div>
 </header>
 
 </body>
+
 </html>

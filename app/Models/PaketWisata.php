@@ -32,4 +32,9 @@ class PaketWisata extends Model
         'foto4',
         'foto5',
     ];
+
+    public function reservasis()
+    {
+        return $this->hasMany(Reservasi::class, 'id_paket');
+    }
 }

@@ -30,17 +30,17 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
             
-            // Check user role and redirect accordingly
+            // Perubahan disini - ganti 'role' menjadi 'level'
             $user = Auth::user();
-            if ($user->role === 'admin') {
+            if ($user->level === 'admin') {
                 return redirect('/admin');
-            } elseif ($user->role === 'owner') {
+            } elseif ($user->level === 'owner') {
                 return redirect('/owner');
-            } elseif ($user->role === 'bendahara') {
+            } elseif ($user->level === 'bendahara') {
                 return redirect('/bendahara');
             }
             
-            // Default redirect for other roles
+            // Default redirect untuk role lainnya
             return redirect('/');
         }
 
