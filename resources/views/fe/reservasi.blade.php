@@ -79,16 +79,16 @@
     .body {
       background-color: rgba(179, 179, 179, 0.32);
     }
-    
+
     .voucher-status {
       margin-top: 5px;
       font-size: 0.875rem;
     }
-    
+
     .voucher-valid {
       color: #28a745;
     }
-    
+
     .voucher-invalid {
       color: #dc3545;
     }
@@ -168,8 +168,8 @@
                 <!-- Kode Voucher -->
                 <div class="mb-4">
                   <label for="voucher_code" class="form-label">Kode Voucher (Opsional)</label>
-                  <input type="text" name="voucher_code" id="voucher_code" class="form-control" 
-                         placeholder="Masukkan kode voucher jika ada">
+                  <input type="text" name="voucher_code" id="voucher_code" class="form-control"
+                    placeholder="Masukkan kode voucher jika ada">
                   <div id="voucherStatus" class="voucher-status"></div>
                   <input type="hidden" name="diskon" id="diskon_hidden" value="0">
                 </div>
@@ -221,11 +221,11 @@
                 </div>
                 @if ($errors->any())
                 <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+                  <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                  </ul>
                 </div>
                 @endif
               </form>
@@ -250,7 +250,7 @@
       const totalBayar = document.getElementById('total_bayar');
       const voucherStatus = document.getElementById('voucherStatus');
       const diskonHidden = document.getElementById('diskon_hidden');
-      
+
       let currentVoucher = null;
 
       // Fungsi untuk validasi voucher
@@ -260,11 +260,11 @@
           currentVoucher = null;
           return;
         }
-        
+
         try {
           const response = await fetch('/api/validate-voucher?code=' + encodeURIComponent(code));
           const data = await response.json();
-          
+
           if (data.valid) {
             voucherStatus.textContent = 'Voucher valid: ' + data.diskon + '% diskon';
             voucherStatus.className = 'voucher-status voucher-valid';
@@ -280,7 +280,7 @@
           voucherStatus.className = 'voucher-status voucher-invalid';
           currentVoucher = null;
         }
-        
+
         calculateTotal();
       }
 
@@ -309,12 +309,12 @@
       // Event listeners
       paketSelect.addEventListener('change', calculateTotal);
       jumlahPeserta.addEventListener('input', calculateTotal);
-      
+
       // Validasi voucher saat kode diubah
       voucherCode.addEventListener('change', function() {
         validateVoucher(this.value);
       });
-      
+
       // Validasi voucher saat form disubmit
       document.getElementById('reservasiForm').addEventListener('submit', function(e) {
         if (voucherCode.value && !currentVoucher) {

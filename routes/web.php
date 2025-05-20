@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/reservasi/riwayat', [App\Http\Controllers\ReservasiController::class, 'riwayat'])->name('reservasi.riwayat');
     Route::get('/reservasi/{id}/invoice', [App\Http\Controllers\ReservasiController::class, 'invoice'])->name('reservasi.invoice');
     Route::get('/reservasi/{id}/download-invoice', [App\Http\Controllers\ReservasiController::class, 'downloadInvoice'])->name('reservasi.download-invoice');
+    Route::post('/reservasi', [App\Http\Controllers\ReservasiController::class, 'store'])->name('reservasi.store');
     
     // Custom Routes untuk Diskon
     Route::post('/diskon/claim/{id}', [App\Http\Controllers\DiskonController::class, 'claim'])->name('diskon.claim');
@@ -67,6 +68,9 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/konfirmasireservasi/{id}/update-status', [App\Http\Controllers\KonfirmasiReservasiController::class, 'updateStatus'])
         ->name('konfirmasireservasi.updateStatus');
 });
+
+   
+
 
 // Route Frontend
 Route::get('/reservasi', [App\Http\Controllers\ReservasiController::class, 'index'])->name('fe.reservasi');

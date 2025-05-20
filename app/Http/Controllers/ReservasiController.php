@@ -41,46 +41,46 @@ class ReservasiController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'id_paket' => 'required|exists:paket_wisatas,id',
             'tgl_reservasi_wisata' => 'required|date|after_or_equal:today',
             'jumlah_peserta' => 'required|integer|min:1',
-            'voucher_code' => 'nullable|exists:vouchers,kode',
-            'file_bukti_tf' => 'required|file|mimes:jpg,png,pdf|max:2048',
+            'file_bukti_tf' => 'required|file|max:5120',
+            'voucher_code' => 'nullable|string',
         ]);
 
         try {
-            // Hitung total bayar
             $paket = PaketWisata::findOrFail($request->id_paket);
             $harga = $paket->harga_per_pack;
             $subtotal = $harga * $request->jumlah_peserta;
-
-            // Hitung diskon jika ada voucher
             $nilai_diskon = 0;
+            $diskon_id = null;
+
             if ($request->voucher_code) {
                 $voucher = Voucher::where('kode', $request->voucher_code)->first();
                 if ($voucher) {
                     $nilai_diskon = $subtotal * ($voucher->nilai_diskon / 100);
+                    $diskon_id = $voucher->id;
                 }
             }
 
             $total_bayar = $subtotal - $nilai_diskon;
 
-            // Simpan file bukti transfer
-            $filePath = $request->file('file_bukti_tf')->store('bukti_transfer');
+            $filePath = $request->file('file_bukti_tf')->store('public/bukti_transfer');
+            $filePath = str_replace('public/', '', $filePath);
 
-            // Buat reservasi baru
             $reservasi = Reservasi::create([
                 'id_pelanggan' => Auth::user()->pelanggan->id,
                 'id_paket' => $request->id_paket,
                 'tgl_reservasi_wisata' => $request->tgl_reservasi_wisata,
                 'harga' => $harga,
                 'jumlah_peserta' => $request->jumlah_peserta,
+                'diskon' => $nilai_diskon > 0 ? 1 : 0,
                 'nilai_diskon' => $nilai_diskon,
                 'total_bayar' => $total_bayar,
                 'file_bukti_tf' => $filePath,
-                'status_reservasi_wisata' => 'menunggu_verifikasi',
+                'status_reservasi_wisata' => 'pesan', // harus salah satu dari enum!
+                'diskon_id' => $diskon_id,
             ]);
 
             return redirect()->route('reservasi.riwayat')
@@ -152,7 +152,7 @@ class ReservasiController extends Controller
         }
 
         $request->validate([
-            'status_reservasi_wisata' => 'required|in:menunggu_verifikasi,dikonfirmasi,dibatalkan'
+            'status_reservasi_wisata' => 'required|in:pesan,dibayar,selsesai',
         ]);
 
         $reservasi = Reservasi::findOrFail($id);

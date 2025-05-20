@@ -20,7 +20,8 @@ class Reservasi extends Model
         'nilai_diskon',
         'total_bayar',
         'file_bukti_tf',
-        'status_reservasi_wisata'
+        'status_reservasi_wisata',
+        'diskon_id'
     ];
 
     public function pelanggan()
