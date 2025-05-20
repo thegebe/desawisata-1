@@ -17,11 +17,10 @@ class Reservasi extends Model
         'tgl_reservasi_wisata',
         'harga',
         'jumlah_peserta',
-        'diskon',
         'nilai_diskon',
         'total_bayar',
         'file_bukti_tf',
-        'status_reservasi_wisata',
+        'status_reservasi_wisata'
     ];
 
     public function pelanggan()

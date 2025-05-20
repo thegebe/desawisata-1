@@ -183,7 +183,7 @@
                         <span class="text-muted">Harga Paket</span>
                       </div>
                       <div class="col-md-8">
-                        <input type="text" id="harga_paket" class="form-control price-display readonly-field" readonly>
+                        <input type="text" id="harga_paket" name="harga_paket" class="form-control price-display readonly-field" readonly>
                       </div>
                     </div>
 
@@ -192,7 +192,7 @@
                         <span class="text-muted">Diskon</span>
                       </div>
                       <div class="col-md-8">
-                        <input type="text" id="nilai_diskon" class="form-control price-display readonly-field" readonly>
+                        <input type="text" id="nilai_diskon" name="nilai_diskon" class="form-control price-display readonly-field" readonly>
                       </div>
                     </div>
 
@@ -221,11 +221,11 @@
                 </div>
                 @if ($errors->any())
                 <div class="alert alert-danger">
-                  <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                  </ul>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
                 @endif
               </form>

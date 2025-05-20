@@ -9,6 +9,7 @@ use App\Models\Diskon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Voucher;
 
 class ReservasiController extends Controller
 {
@@ -27,7 +28,7 @@ class ReservasiController extends Controller
     public function create()
     {
         // Pastikan user sudah login
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
         }
 
@@ -45,7 +46,7 @@ class ReservasiController extends Controller
             'id_paket' => 'required|exists:paket_wisatas,id',
             'tgl_reservasi_wisata' => 'required|date|after_or_equal:today',
             'jumlah_peserta' => 'required|integer|min:1',
-            'voucher_code' => 'nullable|exists:vouchers,kode', // Ubah validasi voucher
+            'voucher_code' => 'nullable|exists:vouchers,kode',
             'file_bukti_tf' => 'required|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
@@ -71,19 +72,18 @@ class ReservasiController extends Controller
 
             // Buat reservasi baru
             $reservasi = Reservasi::create([
-                'id_pelanggan' => auth()->user()->pelanggan->id,
+                'id_pelanggan' => Auth::user()->pelanggan->id,
                 'id_paket' => $request->id_paket,
                 'tgl_reservasi_wisata' => $request->tgl_reservasi_wisata,
                 'harga' => $harga,
                 'jumlah_peserta' => $request->jumlah_peserta,
-                'diskon' => $request->diskon,
                 'nilai_diskon' => $nilai_diskon,
                 'total_bayar' => $total_bayar,
                 'file_bukti_tf' => $filePath,
                 'status_reservasi_wisata' => 'menunggu_verifikasi',
             ]);
 
-            return redirect()->route('reservasi.show', $reservasi->id)
+            return redirect()->route('reservasi.riwayat')
                 ->with('success', 'Reservasi berhasil dibuat!');
         } catch (\Exception $e) {
             return back()->withInput()
@@ -101,8 +101,8 @@ class ReservasiController extends Controller
 
         // Pastikan hanya pemilik atau admin yang bisa melihat
         if (
-            auth()->user()->role !== 'admin' &&
-            auth()->user()->pelanggan->id !== $reservasi->id_pelanggan
+            Auth::user()->role !== 'admin' &&
+            Auth::user()->pelanggan->id !== $reservasi->id_pelanggan
         ) {
             abort(403, 'Unauthorized action.');
         }
@@ -116,7 +116,7 @@ class ReservasiController extends Controller
     public function riwayat()
     {
         $reservasis = Reservasi::with('paketWisata')
-            ->where('id_pelanggan', auth()->user()->pelanggan->id)
+            ->where('id_pelanggan', Auth::user()->pelanggan->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -133,8 +133,8 @@ class ReservasiController extends Controller
 
         // Pastikan hanya pemilik atau admin yang bisa melihat
         if (
-            auth()->user()->role !== 'admin' &&
-            auth()->user()->pelanggan->id !== $reservasi->id_pelanggan
+            Auth::user()->role !== 'admin' &&
+            Auth::user()->pelanggan->id !== $reservasi->id_pelanggan
         ) {
             abort(403, 'Unauthorized action.');
         }
@@ -147,7 +147,7 @@ class ReservasiController extends Controller
      */
     public function updateStatus(Request $request, $id)
     {
-        if (auth()->user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
 
